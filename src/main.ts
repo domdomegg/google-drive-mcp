@@ -215,6 +215,7 @@ const transport = process.env.MCP_TRANSPORT || 'stdio';
 			try {
 				const httpTransport = new StreamableHTTPServerTransport({
 					sessionIdGenerator: undefined,
+					enableJsonResponse: true,
 				});
 				await server.connect(httpTransport);
 				await httpTransport.handleRequest(req, res, req.body);
