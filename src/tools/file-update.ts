@@ -3,17 +3,21 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {uploadFile, makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file to update'),
-	content: z.string().optional().describe('New content for the file'),
-	mimeType: z.string().optional().describe('MIME type of the content (required if content is provided)'),
-	name: z.string().optional().describe('New name for the file'),
-	description: z.string().optional().describe('New description for the file'),
-	starred: z.boolean().optional().describe('Star or unstar the file'),
-	trashed: z.boolean().optional().describe('Move to trash (true) or restore from trash (false). Trashed files can be restored within 30 days.'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file to update'),
+		content: z.string().optional().describe('New content for the file'),
+		mimeType: z.string().optional().describe('MIME type of the content (required if content is provided)'),
+		name: z.string().optional().describe('New name for the file'),
+		description: z.string().optional().describe('New description for the file'),
+		starred: z.boolean().optional().describe('Star or unstar the file'),
+		trashed: z.boolean().optional().describe('Move to trash (true) or restore from trash (false). Trashed files can be restored within 30 days.'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

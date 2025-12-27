@@ -3,14 +3,18 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file or shared drive'),
-	pageSize: z.number().min(1).max(100).default(100).describe('Maximum number of permissions to return (1-100)'),
-	pageToken: z.string().optional().describe('Token for pagination'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-	useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file or shared drive'),
+		pageSize: z.number().min(1).max(100).default(100).describe('Maximum number of permissions to return (1-100)'),
+		pageToken: z.string().optional().describe('Token for pagination'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+		useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
+	},
+	{},
+);
 
 const permissionSchema = z.object({
 	id: z.string(),

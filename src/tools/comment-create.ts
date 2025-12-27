@@ -3,12 +3,16 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file to comment on'),
-	content: z.string().describe('The text content of the comment'),
-	anchor: z.string().optional().describe('JSON anchor for positioned comments on images. Format: [null,[null,[x,y,width,height]],null,null] where x,y,width,height are fractions 0-1. Example: [null,[null,[0.1,0.1,0.3,0.3]],null,null] for top-left region. Does NOT work on Google Docs/Sheets/Slides.'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file to comment on'),
+		content: z.string().describe('The text content of the comment'),
+		anchor: z.string().optional().describe('JSON anchor for positioned comments on images. Format: [null,[null,[x,y,width,height]],null,null] where x,y,width,height are fractions 0-1. Example: [null,[null,[0.1,0.1,0.3,0.3]],null,null] for top-left region. Does NOT work on Google Docs/Sheets/Slides.'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

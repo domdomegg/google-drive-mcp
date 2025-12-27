@@ -3,11 +3,15 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file to permanently delete'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file to permanently delete'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	success: z.boolean(),

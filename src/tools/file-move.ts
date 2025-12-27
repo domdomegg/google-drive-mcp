@@ -3,13 +3,17 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file to move'),
-	addParents: z.array(z.string()).describe('Folder IDs to add as parents (where to move the file)'),
-	removeParents: z.array(z.string()).optional().describe('Folder IDs to remove as parents (current locations)'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file to move'),
+		addParents: z.array(z.string()).describe('Folder IDs to add as parents (where to move the file)'),
+		removeParents: z.array(z.string()).optional().describe('Folder IDs to remove as parents (current locations)'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

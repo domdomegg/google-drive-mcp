@@ -3,12 +3,16 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file'),
-	commentId: z.string().describe('The ID of the comment'),
-	includeDeleted: z.boolean().default(false).describe('Include deleted replies'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file'),
+		commentId: z.string().describe('The ID of the comment'),
+		includeDeleted: z.boolean().default(false).describe('Include deleted replies'),
+	},
+	{},
+);
 
 const replySchema = z.object({
 	id: z.string(),

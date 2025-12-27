@@ -3,13 +3,17 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file to copy'),
-	name: z.string().optional().describe('Name for the copy. If not specified, uses "Copy of [original name]"'),
-	parents: z.array(z.string()).optional().describe('Parent folder IDs for the copy'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file to copy'),
+		name: z.string().optional().describe('Name for the copy. If not specified, uses "Copy of [original name]"'),
+		parents: z.array(z.string()).optional().describe('Parent folder IDs for the copy'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

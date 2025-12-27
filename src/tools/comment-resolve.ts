@@ -3,13 +3,17 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file'),
-	commentId: z.string().describe('The ID of the comment to resolve or reopen'),
-	action: z.enum(['resolve', 'reopen']).default('resolve').describe('Action to perform: "resolve" to mark as resolved, "reopen" to unresolve'),
-	content: z.string().optional().describe('Optional message to include with the action'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file'),
+		commentId: z.string().describe('The ID of the comment to resolve or reopen'),
+		action: z.enum(['resolve', 'reopen']).default('resolve').describe('Action to perform: "resolve" to mark as resolved, "reopen" to unresolve'),
+		content: z.string().optional().describe('Optional message to include with the action'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

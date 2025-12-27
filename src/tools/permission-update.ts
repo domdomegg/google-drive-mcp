@@ -3,17 +3,21 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file or shared drive'),
-	permissionId: z.string().describe('The ID of the permission to update'),
-	role: z.enum(['owner', 'organizer', 'fileOrganizer', 'writer', 'commenter', 'reader']).describe('The new role for the permission'),
-	expirationTime: z.string().optional().describe('Expiration time in RFC 3339 format. Setting to null removes expiration.'),
-	removeExpiration: z.boolean().default(false).describe('Remove the expiration time'),
-	transferOwnership: z.boolean().default(false).describe('Whether to transfer ownership (role must be owner)'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-	useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file or shared drive'),
+		permissionId: z.string().describe('The ID of the permission to update'),
+		role: z.enum(['owner', 'organizer', 'fileOrganizer', 'writer', 'commenter', 'reader']).describe('The new role for the permission'),
+		expirationTime: z.string().optional().describe('Expiration time in RFC 3339 format. Setting to null removes expiration.'),
+		removeExpiration: z.boolean().default(false).describe('Remove the expiration time'),
+		transferOwnership: z.boolean().default(false).describe('Whether to transfer ownership (role must be owner)'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+		useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

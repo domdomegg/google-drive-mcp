@@ -3,12 +3,16 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	name: z.string().describe('The name of the folder'),
-	parents: z.array(z.string()).optional().describe('Parent folder IDs. If not specified, folder is created in root.'),
-	description: z.string().optional().describe('Description of the folder'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		name: z.string().describe('The name of the folder'),
+		parents: z.array(z.string()).optional().describe('Parent folder IDs. If not specified, folder is created in root.'),
+		description: z.string().optional().describe('Description of the folder'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

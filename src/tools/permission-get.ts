@@ -3,13 +3,17 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file or shared drive'),
-	permissionId: z.string().describe('The ID of the permission'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-	useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file or shared drive'),
+		permissionId: z.string().describe('The ID of the permission'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+		useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),
