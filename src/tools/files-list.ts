@@ -3,17 +3,23 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	query: z.string().optional().describe('Search query using Drive search syntax (e.g., "name contains \'report\'" or "mimeType=\'application/pdf\'")'),
-	pageSize: z.number().min(1).max(1000).default(100).describe('Maximum number of files to return (1-1000)'),
-	pageToken: z.string().optional().describe('Token for pagination'),
-	orderBy: z.string().optional().describe('Sort order (e.g., "modifiedTime desc", "name")'),
-	fields: z.string().optional().describe('Fields to include in response. Defaults to common fields.'),
-	spaces: z.enum(['drive', 'appDataFolder']).default('drive').describe('Spaces to search'),
-	includeItemsFromAllDrives: z.boolean().default(true).describe('Include files from shared drives'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		q: z.string().optional().describe('Search query using Drive search syntax (e.g., "name contains \'report\'" or "mimeType=\'application/pdf\'")'),
+		pageSize: z.number().min(1).max(1000).default(100).describe('Maximum number of files to return (1-1000)'),
+		pageToken: z.string().optional().describe('Token for pagination'),
+		orderBy: z.string().optional().describe('Sort order (e.g., "modifiedTime desc", "name")'),
+		fields: z.string().optional().describe('Fields to include in response. Defaults to common fields.'),
+		spaces: z.enum(['drive', 'appDataFolder']).default('drive').describe('Spaces to search'),
+		includeItemsFromAllDrives: z.boolean().default(true).describe('Include files from shared drives'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+	},
+	{
+		query: 'q',
+	},
+);
 
 const fileSchema = z.object({
 	id: z.string(),
@@ -51,11 +57,11 @@ export function registerFilesList(server: McpServer, config: Config): void {
 				readOnlyHint: true,
 			},
 		},
-		async ({query, pageSize, pageToken, orderBy, fields, spaces, includeItemsFromAllDrives, supportsAllDrives}) => {
+		async ({q, pageSize, pageToken, orderBy, fields, spaces, includeItemsFromAllDrives, supportsAllDrives}) => {
 			const params = new URLSearchParams();
 
-			if (query) {
-				params.set('q', query);
+			if (q) {
+				params.set('q', q);
 			}
 
 			params.set('pageSize', String(pageSize));

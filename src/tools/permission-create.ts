@@ -3,20 +3,24 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file or shared drive'),
-	type: z.enum(['user', 'group', 'domain', 'anyone']).describe('The type of grantee: user, group, domain, or anyone'),
-	role: z.enum(['owner', 'organizer', 'fileOrganizer', 'writer', 'commenter', 'reader']).describe('The role granted by this permission'),
-	emailAddress: z.string().optional().describe('Email address of user or group (required for type user/group)'),
-	domain: z.string().optional().describe('Domain (required for type domain, e.g. "example.com")'),
-	sendNotificationEmail: z.boolean().default(true).describe('Send a notification email when sharing'),
-	emailMessage: z.string().optional().describe('Custom message to include in the notification email'),
-	transferOwnership: z.boolean().default(false).describe('Whether to transfer ownership to the specified user (role must be owner)'),
-	moveToNewOwnersRoot: z.boolean().default(false).describe('Move the file to the new owner\'s My Drive root folder (only for transferOwnership)'),
-	supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
-	useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file or shared drive'),
+		type: z.enum(['user', 'group', 'domain', 'anyone']).describe('The type of grantee: user, group, domain, or anyone'),
+		role: z.enum(['owner', 'organizer', 'fileOrganizer', 'writer', 'commenter', 'reader']).describe('The role granted by this permission'),
+		emailAddress: z.string().optional().describe('Email address of user or group (required for type user/group)'),
+		domain: z.string().optional().describe('Domain (required for type domain, e.g. "example.com")'),
+		sendNotificationEmail: z.boolean().default(true).describe('Send a notification email when sharing'),
+		emailMessage: z.string().optional().describe('Custom message to include in the notification email'),
+		transferOwnership: z.boolean().default(false).describe('Whether to transfer ownership to the specified user (role must be owner)'),
+		moveToNewOwnersRoot: z.boolean().default(false).describe('Move the file to the new owner\'s My Drive root folder (only for transferOwnership)'),
+		supportsAllDrives: z.boolean().default(true).describe('Support shared drives'),
+		useDomainAdminAccess: z.boolean().default(false).describe('Issue the request as a domain administrator'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),

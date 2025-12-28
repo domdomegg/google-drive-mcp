@@ -3,13 +3,17 @@ import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type {Config} from './types.js';
 import {makeDriveApiCall} from '../utils/drive-api.js';
 import {jsonResult} from '../utils/response.js';
+import {strictSchemaWithAliases} from '../utils/schema.js';
 
-const inputSchema = {
-	fileId: z.string().describe('The ID of the file'),
-	commentId: z.string().describe('The ID of the comment'),
-	replyId: z.string().describe('The ID of the reply to update'),
-	content: z.string().describe('The updated text content of the reply'),
-};
+const inputSchema = strictSchemaWithAliases(
+	{
+		fileId: z.string().describe('The ID of the file'),
+		commentId: z.string().describe('The ID of the comment'),
+		replyId: z.string().describe('The ID of the reply to update'),
+		content: z.string().describe('The updated text content of the reply'),
+	},
+	{},
+);
 
 const outputSchema = z.object({
 	id: z.string(),
