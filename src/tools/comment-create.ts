@@ -36,6 +36,11 @@ For images: supports anchored comments using the anchor parameter with format [n
 For Google Docs/Sheets/Slides: only unanchored comments work (appear in sidebar). Anchored comments cannot be created via API due to proprietary formats. See: https://issuetracker.google.com/issues/36763384. However, you can use comment_reply to reply to existing anchored comments.`,
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({fileId, content, anchor}) => {
 			const body: Record<string, unknown> = {content};

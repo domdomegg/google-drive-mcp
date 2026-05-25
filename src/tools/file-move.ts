@@ -30,6 +30,11 @@ export function registerFileMove(server: McpServer, config: Config): void {
 			description: 'Move a file to a different folder by changing its parents.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, addParents, removeParents, supportsAllDrives}) => {
 			const params = new URLSearchParams();

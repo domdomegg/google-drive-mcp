@@ -32,6 +32,11 @@ export function registerCommentResolve(server: McpServer, config: Config): void 
 			description: 'Resolve or reopen a comment by posting a reply with the specified action.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, commentId, action, content}) => {
 			const body: Record<string, string> = {action};

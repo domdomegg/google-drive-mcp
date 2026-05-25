@@ -32,6 +32,11 @@ export function registerCommentReply(server: McpServer, config: Config): void {
 			description: 'Add a reply to an existing comment.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({fileId, commentId, content}) => {
 			const result = await makeDriveApiCall(

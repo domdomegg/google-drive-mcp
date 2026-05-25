@@ -43,6 +43,11 @@ export function registerPermissionCreate(server: McpServer, config: Config): voi
 			description: 'Share a file or shared drive by creating a new permission. Grants access to a user, group, domain, or anyone.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({fileId, type, role, emailAddress, domain, sendNotificationEmail, emailMessage, transferOwnership, moveToNewOwnersRoot, supportsAllDrives, useDomainAdminAccess}) => {
 			const params = new URLSearchParams();

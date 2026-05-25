@@ -28,6 +28,11 @@ export function registerPermissionDelete(server: McpServer, config: Config): voi
 			description: 'Remove a permission from a file or shared drive, revoking access for that user/group/domain.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: true,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, permissionId, supportsAllDrives, useDomainAdminAccess}) => {
 			const params = new URLSearchParams();

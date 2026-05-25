@@ -34,6 +34,11 @@ export function registerFileUpload(server: McpServer, config: Config): void {
 			description: 'Upload a new file to Google Drive.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({name, content, mimeType, isBase64, parents, description}) => {
 			const metadata: Record<string, unknown> = {name, mimeType};

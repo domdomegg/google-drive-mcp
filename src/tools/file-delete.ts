@@ -27,7 +27,9 @@ export function registerFileDelete(server: McpServer, config: Config): void {
 			inputSchema,
 			outputSchema,
 			annotations: {
+				readOnlyHint: false,
 				destructiveHint: true,
+				idempotentHint: true,
 			},
 		},
 		async ({fileId, supportsAllDrives}) => {
