@@ -34,6 +34,11 @@ export function registerReplyUpdate(server: McpServer, config: Config): void {
 			description: 'Update the content of an existing reply.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: true,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, commentId, replyId, content}) => {
 			const result = await makeDriveApiCall(

@@ -30,6 +30,11 @@ export function registerFolderCreate(server: McpServer, config: Config): void {
 			description: 'Create a new folder in Google Drive.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({name, parents, description}) => {
 			const body: Record<string, unknown> = {

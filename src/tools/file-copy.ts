@@ -31,6 +31,11 @@ export function registerFileCopy(server: McpServer, config: Config): void {
 			description: 'Create a copy of a file.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: false,
+			},
 		},
 		async ({fileId, name, parents, supportsAllDrives}) => {
 			const params = new URLSearchParams();

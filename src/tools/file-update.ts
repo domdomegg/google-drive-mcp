@@ -36,6 +36,11 @@ export function registerFileUpdate(server: McpServer, config: Config): void {
 			description: 'Update a file\'s content or metadata. Provide content to update file content, or just metadata fields to update metadata only.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: true,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, content, mimeType, name, description, starred, trashed, supportsAllDrives}) => {
 			const metadata: Record<string, unknown> = {};

@@ -40,6 +40,11 @@ export function registerPermissionUpdate(server: McpServer, config: Config): voi
 			description: 'Update an existing permission on a file or shared drive. Can change role or expiration.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: false,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, permissionId, role, expirationTime, removeExpiration, transferOwnership, supportsAllDrives, useDomainAdminAccess}) => {
 			const params = new URLSearchParams();

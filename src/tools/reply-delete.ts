@@ -27,6 +27,11 @@ export function registerReplyDelete(server: McpServer, config: Config): void {
 			description: 'Delete a reply from a comment.',
 			inputSchema,
 			outputSchema,
+			annotations: {
+				readOnlyHint: false,
+				destructiveHint: true,
+				idempotentHint: true,
+			},
 		},
 		async ({fileId, commentId, replyId}) => {
 			await makeDriveApiCall(
