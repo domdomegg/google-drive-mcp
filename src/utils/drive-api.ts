@@ -112,11 +112,32 @@ export async function uploadFile(
 	return parseResponse(response);
 }
 
+// MIME types whose payloads can safely be returned as plain UTF-8 text.
+// Anything else is returned base64-encoded so binary bytes survive the
+// string-based MCP transport (decoding e.g. a PDF as UTF-8 replaces invalid
+// byte sequences and corrupts the file irreversibly).
+export function isTextMimeType(mimeType: string): boolean {
+	const essence = (mimeType.split(';')[0] ?? '').trim().toLowerCase();
+	return essence.startsWith('text/')
+		|| essence.endsWith('+json')
+		|| essence.endsWith('+xml')
+		|| ['application/json', 'application/xml', 'application/javascript', 'application/x-javascript', 'application/yaml', 'application/x-yaml', 'application/sql', 'application/rtf'].includes(essence);
+}
+
+async function readContent(response: Response, mimeType: string): Promise<{content: string; isBase64: boolean}> {
+	if (isTextMimeType(mimeType)) {
+		return {content: await response.text(), isBase64: false};
+	}
+
+	const buffer = Buffer.from(await response.arrayBuffer());
+	return {content: buffer.toString('base64'), isBase64: true};
+}
+
 // Download file content
 export async function downloadFile(
 	accessToken: string,
 	fileId: string,
-): Promise<{content: string; mimeType: string}> {
+): Promise<{content: string; mimeType: string; isBase64: boolean}> {
 	const url = `${DRIVE_API_BASE_URL}/files/${fileId}?alt=media`;
 
 	const response = await fetch(url, {
@@ -131,9 +152,7 @@ export async function downloadFile(
 	}
 
 	const mimeType = response.headers.get('content-type') || 'application/octet-stream';
-	const content = await response.text();
-
-	return {content, mimeType};
+	return {...await readContent(response, mimeType), mimeType};
 }
 
 // Export file (for Google Docs, Sheets, etc. to different formats)
@@ -141,7 +160,7 @@ export async function exportFile(
 	accessToken: string,
 	fileId: string,
 	exportMimeType: string,
-): Promise<{content: string; mimeType: string}> {
+): Promise<{content: string; mimeType: string; isBase64: boolean}> {
 	const url = `${DRIVE_API_BASE_URL}/files/${fileId}/export?mimeType=${encodeURIComponent(exportMimeType)}`;
 
 	const response = await fetch(url, {
@@ -155,6 +174,5 @@ export async function exportFile(
 		await handleApiError(response);
 	}
 
-	const content = await response.text();
-	return {content, mimeType: exportMimeType};
+	return {...await readContent(response, exportMimeType), mimeType: exportMimeType};
 }

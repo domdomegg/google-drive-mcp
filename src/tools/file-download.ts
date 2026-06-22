@@ -16,6 +16,7 @@ const inputSchema = strictSchemaWithAliases(
 const outputSchema = z.object({
 	content: z.string(),
 	mimeType: z.string(),
+	isBase64: z.boolean(),
 });
 
 export function registerFileDownload(server: McpServer, config: Config): void {
@@ -23,7 +24,7 @@ export function registerFileDownload(server: McpServer, config: Config): void {
 		'file_download',
 		{
 			title: 'Download file content',
-			description: 'Download the content of a file. For Google Docs/Sheets/Slides, use exportMimeType to specify the format (e.g., "text/plain" for Docs, "text/csv" for Sheets).',
+			description: 'Download the content of a file. Text files are returned as plain text; binary files (images, PDFs, etc.) are returned base64-encoded with isBase64: true. For Google Docs/Sheets/Slides, use exportMimeType to specify the format (e.g., "text/plain" for Docs, "text/csv" for Sheets).',
 			inputSchema,
 			outputSchema,
 			annotations: {
