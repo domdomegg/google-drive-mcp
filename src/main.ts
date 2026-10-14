@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
 import {StreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import type {Transport} from '@modelcontextprotocol/sdk/shared/transport.js';
 import express, {type Request, type Response} from 'express';
 import {createServer} from './index.js';
 import type {
@@ -54,7 +55,7 @@ const transport = process.env.MCP_TRANSPORT || 'stdio';
 		setupSignalHandlers(async () => server.close());
 
 		const stdioTransport = new StdioServerTransport();
-		await server.connect(stdioTransport);
+		await server.connect(stdioTransport as Transport);
 		console.error('Google Drive MCP server running on stdio');
 	} else if (transport === 'http') {
 		if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
@@ -225,10 +226,9 @@ const transport = process.env.MCP_TRANSPORT || 'stdio';
 
 			try {
 				const httpTransport = new StreamableHTTPServerTransport({
-					sessionIdGenerator: undefined,
 					enableJsonResponse: true,
 				});
-				await server.connect(httpTransport);
+				await server.connect(httpTransport as Transport);
 				await httpTransport.handleRequest(req, res, req.body);
 
 				res.on('close', () => {
